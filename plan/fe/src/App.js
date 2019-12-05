@@ -1,26 +1,54 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
+// import logo from './logo.svg';
 import './App.css';
+import {getAllStudents} from './query'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+
+  state = {
+    students: []
+  }
+
+  componentDidMount() {
+    this.fetchStudent();
+  }
+
+  fetchStudent = () => {
+    getAllStudents().then(res => res.json().then(students => {
+      console.log(students);
+      this.setState({
+        students
+      });
+    }));
+  }
+
+  render() {
+
+    const { students } = this.state;
+
+    if (students && students.length) {
+
+      students.map((student, index) => {
+        console.log("student " + index)
+        console.log(student);
+      })
+
+      return students.map((student, index) => {
+        return (
+          <div key={index}>
+            Index is {index}
+            <p>HI {student.id}</p>
+            <p>HI {student.name}</p>
+          </div>
+        );
+      });
+
+    }
+
+    return (
+      <h1>No Students found</h1>
+    );
+  }
 }
 
 export default App;
