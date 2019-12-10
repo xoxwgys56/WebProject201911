@@ -15,7 +15,9 @@ class App extends Component {
   }
 
   fetchStudent = () => {
-    getAllStudents().then(res => res.json().then(students => {
+    getAllStudents()
+      .then(res => res.json()
+        .then(students => {
       console.log(students);
       this.setState({
         students
