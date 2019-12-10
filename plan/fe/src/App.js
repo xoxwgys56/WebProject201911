@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 // import logo from './logo.svg';
 import './App.css';
 import {getAllStudents} from './query'
+import Login from './components/Login'
 
 class App extends Component {
 
@@ -39,6 +40,8 @@ class App extends Component {
             Index is {index}
             <p>HI {student.id}</p>
             <p>HI {student.name}</p>
+            <a href="/">페이지 이동</a>
+            <Login></Login>
           </div>
         );
       });
