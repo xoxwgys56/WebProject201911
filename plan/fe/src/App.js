@@ -1,59 +1,72 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 // import logo from './logo.svg';
 import './App.css';
-import {getAllStudents} from './query'
-import Login from './components/Login'
 
-class App extends Component {
+import Login from './components/Login.js'
+import Home from './components/Home.js'
+import About from './components/About.js'
+import Profile from './components/Profile.js'
+import LogoutButton from './components/LogoutButton.js'
+import LoginForm from './components/LoginForm.js'
+import AuthRoute from './components/AuthRoute.js'
+import { signIn } from './components/auth.js';
+import NotFound from './components/NotFound.js'
+import { Link, Route, Switch, BrowserRouter as Router } from "react-router-dom";
 
-  state = {
-    students: []
-  }
 
-  componentDidMount() {
-    this.fetchStudent();
-  }
+function App() {
+  const [user, setUser] = useState(null);
+    const authenticated = user != null;
 
-  fetchStudent = () => {
-    getAllStudents()
-      .then(res => res.json()
-        .then(students => {
-      console.log(students);
-      this.setState({
-        students
-      });
-    }));
-  }
-
-  render() {
-
-    const { students } = this.state;
-
-    if (students && students.length) {
-
-      students.map((student, index) => {
-        console.log("student " + index)
-        console.log(student);
-      })
-
-      return students.map((student, index) => {
-        return (
-          <div key={index}>
-            Index is {index}
-            <p>HI {student.id}</p>
-            <p>HI {student.name}</p>
-            <a href="/">페이지 이동</a>
-            <Login></Login>
-          </div>
-        );
-      });
-
-    }
-
+    const login = ({ email, password }) => setUser(signIn({ email, password }));
+    const logout = () => setUser(null);
+    
     return (
-      <h1>No Students found</h1>
-    );
+
+      <div className="App">
+        <Login></Login>
+        <Router>
+          <header>
+            <Link to="/">
+              <button>Home</button>
+            </Link>
+            <Link to="/about">
+              <button>About</button>
+            </Link>
+            <Link to="/profile">
+              <button>Profile</button>
+            </Link>
+            {authenticated ? (
+              <LogoutButton logout={logout} />
+            ) : (
+                <Link to="/login">
+                  <button>Login</button>
+                </Link>
+              )}
+          </header>
+          <hr />
+          <main>
+            <Switch>
+              <Route exact path="/" component={Home} />
+              <Route path="/about" component={About} />
+              <Route
+                path="/login"
+                render={props => (
+                  <LoginForm authenticated={authenticated} login={login} {...props} />
+                )}
+              />
+              <AuthRoute
+                authenticated={authenticated}
+                path="/profile"
+                render={props => <Profile user={user} {...props} />}
+              />
+              <Route component={NotFound} />
+            </Switch>
+          </main>
+        </Router>
+      </div>
+    )
   }
-}
+
 
 export default App;
