@@ -1,0 +1,44 @@
+package com.example.demo.controller;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.example.demo.member.dto.Test;
+import com.example.demo.member.service.MemberService;
+import com.example.demo.member.service.TestService;
+
+@Controller
+public class Hello {
+	@Autowired
+    TestService testService;
+    @Autowired
+    MemberService memberService;
+    
+	@RequestMapping("/jsp")
+    public String jsp() throws Exception {
+        return "main";
+    }
+	
+	@RequestMapping(value = "/aaa", method=RequestMethod.POST)
+    public @ResponseBody void m(HttpServletRequest request) {
+		String student=request.getParameter("student");
+		String name=request.getParameter("name");
+		String age=request.getParameter("age");
+		System.out.println(student+name+age);
+    	
+    }
+    
+    @RequestMapping(value = "/query")
+    public @ResponseBody List<Test> query() throws Exception{
+    	return testService.getAll();
+    }
+
+}
